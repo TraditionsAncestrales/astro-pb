@@ -6,8 +6,10 @@ export default async (request: Request) => {
     const payload = await request.json();
     const { tags } = z.object({ tags: z.string().array() }).parse(payload);
     await purgeCache({ tags });
+    return new Response(JSON.stringify("ok"), { status: 200 });
   } catch (error_) {
     console.error(error_);
+    return new Response(JSON.stringify("error"), { status: 500 });
   }
 };
 
