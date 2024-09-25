@@ -13,6 +13,7 @@ onRecordAfterUpdateRequest(({ collection, record }) => {
         body: JSON.stringify({ tags }),
         headers: { "content-type": "application/json" },
       });
+      console.log(`Webhook - ${collection.name} - ${record.id} - ${url} : success`);
     } catch (error) {
       console.error(`Webhook - ${collection.name} - ${record.id} - ${url} : ${error.message}`);
     }
