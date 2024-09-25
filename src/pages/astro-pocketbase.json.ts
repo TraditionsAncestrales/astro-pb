@@ -2,6 +2,8 @@ import { purgeCache } from "@netlify/functions";
 import type { APIRoute } from "astro";
 import { z } from "zod";
 
+export const prerender = false;
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const payload = await request.json();
