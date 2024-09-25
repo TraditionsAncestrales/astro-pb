@@ -1,0 +1,28 @@
+---
+import Section from "@/components/ui/section.astro";
+import Title from "@/components/ui/title.astro";
+import { zNewsletterValues } from "@/lib/utils";
+import { Icon } from "astro-icon/components";
+import { superValidate } from "sveltekit-superforms";
+import { zod } from "sveltekit-superforms/adapters";
+import Form from "./the-newsletter.form.svelte";
+
+// PROPS ***********************************************************************************************************************************
+const { ...rest } = Astro.props;
+
+// VARS ************************************************************************************************************************************
+const sv = await superValidate(Astro.request, zod(zNewsletterValues));
+---
+
+<Section {...rest}>
+  <Title slot="header" text="Newsletter" class="mb-8" />
+  <div class="flex w-full flex-col gap-4 lg:flex-row lg:gap-12">
+    <p class="text-justify lg:max-w-sm xl:max-w-lg">
+      Pour recevoir chaque semaine mon bulletin, c'est simple, vous avez juste à saisir votre courriel :
+    </p>
+    <Form client:visible {sv} class="flex-1">
+      <Icon slot="submit-icon" name="bi:envelope-plus" class="h-4 w-4" />
+      <Icon slot="submitting-icon" name="bi:envelope-plus" class="h-4 w-4" />
+    </Form>
+  </div>
+</Section>

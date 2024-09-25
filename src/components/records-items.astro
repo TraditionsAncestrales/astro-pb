@@ -1,0 +1,32 @@
+---
+import type { Item } from "@/content/utils";
+import RecordsItem from "./records-item.astro";
+import Carousel from "./ui/carousel.astro";
+import Section, { type SectionProps } from "./ui/section.astro";
+import Title from "./ui/title.astro";
+
+// PROPS ***********************************************************************************************************************************
+const { items = [], title, ...rest } = Astro.props;
+
+// VARS ************************************************************************************************************************************
+const hasSome = items.length > 0;
+
+// TYPES ***********************************************************************************************************************************
+type Props = SectionProps & { items: Item[]; title: string };
+export type RecordsItemsProps = Props;
+---
+
+<Section expanded={hasSome} {...rest}>
+  <Title slot="header" text={title} class="mb-8" />
+  {
+    hasSome ? (
+      <Carousel class="w-full">
+        {items.map((item) => (
+          <RecordsItem {item} class="splide__slide mb-2 shadow-md" />
+        ))}
+      </Carousel>
+    ) : (
+      <slot />
+    )
+  }
+</Section>

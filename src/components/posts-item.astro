@@ -1,0 +1,29 @@
+---
+import type { Item } from "@/content/utils";
+import { Image as Img } from "@unpic/astro";
+import { BUTTON } from "./ui/button";
+import Section, { type SectionProps } from "./ui/section.astro";
+import Title from "./ui/title.astro";
+
+// PROPS ***********************************************************************************************************************************
+const { intent = "white", post, ...rest } = Astro.props;
+
+// VARS ************************************************************************************************************************************
+if (!post) return;
+const { href, image, text, title } = post;
+const sizes = `(min-width: 1536px) 42rem, (min-width: 1280px) 36rem, (min-width: 1024px) 28rem, (min-width: 768px) 20rem (min-width: 640px) 36rem, 100vw`;
+// const widths = [320, 448, 576, 672];
+const btnIntent = intent === "primary" ? "secondary" : "primary";
+
+// TYPES ***********************************************************************************************************************************
+type Props = SectionProps & { post?: Item };
+export type PostsItemProps = Props;
+---
+
+<Section {intent} {...rest}>
+  <Title slot="header" text={title} class="mb-8 xl:hidden" />
+  <Img slot="aside" {...image} width={672} {sizes} class="relative shadow-lg shadow-black/50" />
+  <Title text={title} class="hidden self-start xl:inline-flex" />
+  <article set:html={text} />
+  <a {href} class={BUTTON({ intent: btnIntent, className: "self-end" })}> En savoir plus </a>
+</Section>

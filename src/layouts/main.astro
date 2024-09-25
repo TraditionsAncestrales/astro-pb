@@ -1,0 +1,72 @@
+---
+import "@/styles/globals.css";
+import "@/styles/theme.css";
+import TheFooter from "./_/the-footer.astro";
+import TheHeader from "./_/the-header.astro";
+import TheHero from "./_/the-hero.astro";
+import { cn } from "@/lib/utils";
+import TheOtherKnowledges from "./_/the-other-knowledges.astro";
+import TheNewsletter from "./_/the-newsletter.astro";
+import PostsItem from "@/components/posts-item.astro";
+import TheContact from "@/layouts/_/the-contact.astro";
+import { configFrom, itemFromKnowledge, itemFromPost, knowledgeFrom, postFrom } from "@/content/utils";
+import { ClientRouter } from "astro:transitions";
+import { getRecordOrThrow, getRecords } from "pocketbase:astro";
+import { Toaster } from "@/components/ui/sonner";
+
+// PROPS ***********************************************************************************************************************************
+const { isMain = false } = Astro.props;
+const { knowledge = "traditions-ancestrales" } = Astro.params;
+
+// VARS ************************************************************************************************************************************
+const isHome = isMain && knowledge === "traditions-ancestrales";
+
+// DATA ************************************************************************************************************************************
+const [config, knowledges, organizationPost] = await Promise.all([
+  getRecordOrThrow({ collection: "config", id: "fedcba987654321" }, configFrom),
+  getRecords("knowledges", { map: (record) => knowledgeFrom(record).then(itemFromKnowledge) }),
+  getRecordOrThrow({ collection: "posts", slug: "l-association" }, postFrom).then(itemFromPost),
+]);
+
+const currentKnowledge = knowledges.find(({ slug }) => slug === knowledge);
+const otherKnowledges = knowledges.filter(({ slug }) => slug !== knowledge);
+
+const hero = { image: currentKnowledge!.image!, subtitle: config.title, title: currentKnowledge!.title };
+
+// CACHE ***********************************************************************************************************************************
+export const layoutCache = "config, knowledges, posts_l-association";
+
+// TYPES ***********************************************************************************************************************************
+export type Props = { isMain?: boolean };
+---
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Traditions ancestrales</title>
+    <ClientRouter />
+  </head>
+  <body class="group overflow-y-auto overflow-x-hidden" data-theme={knowledge}>
+    <RootElement><div data-target="scroll"></div></RootElement>
+    <TheHeader class="fixed left-0 top-0 z-30 w-full" />
+    <TheHero {...hero} class={cn(isMain ? "h-screen" : "h-[50vh]")} />
+    <slot />
+    {isHome && <PostsItem post={organizationPost} border="bottom" intent="primary" />}
+    <TheOtherKnowledges knowledges={otherKnowledges} />
+    <TheNewsletter border="top" intent="primary" />
+    {isHome ? <TheContact intent="light" /> : <PostsItem post={organizationPost} class="mb-4" />}
+    <TheFooter {config} />
+    <Toaster client:load richColors theme="light" />
+  </body>
+</html>
+
+<script>
+  RootElement.ready(($) => {
+    const observer = new IntersectionObserver(([entry]) => (document.body.dataset.scrolled = `${entry.boundingClientRect.y < 0}`));
+    observer.observe($("scroll"));
+    return () => observer.disconnect();
+  });
+</script>

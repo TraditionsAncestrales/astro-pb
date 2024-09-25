@@ -1,0 +1,46 @@
+---
+import Features from "@/components/ui/features.astro";
+import Section from "@/components/ui/section.astro";
+import Title from "@/components/ui/title.astro";
+import { entryFromPost, entryFromService, pathFromPost, pathFromService, postFrom, serviceFrom } from "@/content/utils";
+import Layout, { layoutCache } from "@/layouts/main.astro";
+import { Image } from "@unpic/astro";
+import { getRecord, getRecords } from "pocketbase:astro";
+
+// PATHS ***********************************************************************************************************************************
+export const getStaticPaths = async () =>
+  Promise.all([
+    getRecords("posts", { map: (record) => postFrom(record).then(pathFromPost) }),
+    getRecords("services", { map: (record) => serviceFrom(record).then(pathFromService) }),
+  ]).then((paths) => paths.flat());
+
+// PROPS ***********************************************************************************************************************************
+const { collection, slug } = Astro.params;
+
+// DATA ************************************************************************************************************************************
+const entry = await (collection === "articles"
+  ? //@ts-ignore
+    getRecord({ collection: "posts", slug }, (record) => postFrom(record).then(entryFromPost))
+  : //@ts-ignore
+    getRecord({ collection: "services", slug }, (record) => serviceFrom(record).then(entryFromService)));
+if (!entry) return Astro.redirect("/404");
+const { features, image, text, title } = entry;
+
+// VARS ************************************************************************************************************************************
+const sizes = `(min-width: 1536px) 42rem, (min-width: 1280px) 36rem, (min-width: 1024px) 28rem, (min-width: 768px) 20rem (min-width: 640px) 36rem, 100vw`;
+// const widths = [320, 448, 576, 672];
+
+// CACHE ***********************************************************************************************************************************
+Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
+Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, ${collection === "articles" ? "posts" : "services"}_${slug}`);
+---
+
+<Layout>
+  <Section asideRight border="all" intent="white">
+    <Title slot="header" text={title} class="mb-8" />
+    {image && <Image slot={image && "aside"} {...image} width={672} sizes={sizes} class="relative shadow-lg shadow-black/50" />}
+    <Features slot="aside" features={features} />
+    <article set:html={text} />
+  </Section>
+</Layout>

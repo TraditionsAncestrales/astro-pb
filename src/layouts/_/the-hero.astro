@@ -1,0 +1,25 @@
+---
+import type { Image } from "@/content/utils";
+import { cn } from "@/lib/utils";
+import { Image as Img } from "@unpic/astro";
+import type { ClassValue } from "tailwind-variants";
+
+// PROPS ***********************************************************************************************************************************
+const { class: className, image, subtitle, title } = Astro.props;
+
+// STYLES **********************************************************************************************************************************
+const cMask = `[mask-image:url(/splash.webp)] [mask-size:contain] [mask-position:center] [mask-repeat:no-repeat]`;
+
+// TYPES ***********************************************************************************************************************************
+type Props = { class?: ClassValue; subtitle: string; title: string; image: Image };
+export type HeroProps = Props;
+---
+
+<div class={cn("w-full flex items-center justify-center bg-cover bg-center font-bold relative", className)}>
+  <Img {...image} priority objectFit="cover" class="absolute inset-0 h-full w-full" />
+  <div class="relative py-40 text-center uppercase tracking-widest text-white">
+    <div class={cn("absolute inset-0 bg-primary", cMask)}></div>
+    <h1 class="relative my-2 max-w-2xl text-4xl sm:text-7xl">{title}</h1>
+    <h2 class="relative text-xs">{subtitle}</h2>
+  </div>
+</div>

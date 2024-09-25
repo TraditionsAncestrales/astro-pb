@@ -1,0 +1,58 @@
+---
+import PostsItem from "@/components/posts-item.astro";
+import RecordsItems from "@/components/records-items.astro";
+import ServicesItems from "@/components/services-items.astro";
+import { eventFrom, itemFromEvent, itemFromPost, itemFromService, knowledgeFrom, pageFrom, pathFromKnowledge } from "@/content/utils";
+import Layout, { layoutCache } from "@/layouts/main.astro";
+import { isAfter } from "@formkit/tempo";
+import { getRecordOrThrow, getRecords } from "pocketbase:astro";
+
+// PATHS ***********************************************************************************************************************************
+export async function getStaticPaths() {
+  return getRecords("knowledges", { map: (record) => knowledgeFrom(record).then(pathFromKnowledge) });
+}
+
+// PROPS ***********************************************************************************************************************************
+const { knowledge = "traditions-ancestrales" } = Astro.params;
+
+// DATA ************************************************************************************************************************************
+const [page, events] = await Promise.all([
+  getRecordOrThrow({ collection: "pages", slug: knowledge }, pageFrom),
+  getRecords("events", {
+    filter: ({ from }) => isAfter(from, new Date()),
+    map: (record) => eventFrom(record).then(itemFromEvent),
+  }),
+]);
+
+//TODO: filter events by knowledge
+
+const post = itemFromPost(page.post);
+
+const services = page.services.map((service) => itemFromService(service));
+const trainings = services.filter(({ extra: { category } }) => category === "training");
+const workshops = services.filter(({ extra: { category } }) => category === "workshop");
+const consultations = services.filter(({ extra: { category } }) => category === "consult");
+
+// VARS ************************************************************************************************************************************
+const count = +(consultations.length > 0) + +(workshops.length > 0) + +(trainings.length > 0);
+const consultationsIntent = count > 1 ? "primary" : "light";
+const trainingsIntent = count === 3 ? "white" : "light";
+
+// CACHE ***********************************************************************************************************************************
+Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
+Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, events, pages_${knowledge}`);
+---
+
+<Layout isMain>
+  <PostsItem {post} border="top" class={{ ASIDE: "!max-w-sm" }} />
+  <ServicesItems services={consultations} intent={consultationsIntent} />
+  <ServicesItems services={workshops} intent="light" />
+  <ServicesItems services={trainings} intent={trainingsIntent} />
+  <RecordsItems title="Événements" items={events} border="bottom" intent="primary">
+    <div>
+      <p>Retrouvez bientôt ici l'ensemble de mes événements.</p>
+      <strong>Vous pouvez déjà en obtenir le programme en me faisant une demande via le formulaire de contact.</strong>
+    </div>
+  </RecordsItems>
+</Layout>

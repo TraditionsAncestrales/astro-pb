@@ -1,0 +1,37 @@
+---
+import PostsItem from "@/components/posts-item.astro";
+import RecordsItems from "@/components/records-items.astro";
+import TestimoniesSection from "@/components/testimonies-section.astro";
+import { eventFrom, itemFromEvent, itemFromPost, pageFrom, testimonyFrom } from "@/content/utils";
+import Layout, { layoutCache } from "@/layouts/main.astro";
+import { isAfter } from "@formkit/tempo";
+import { getRecordOrThrow, getRecords } from "pocketbase:astro";
+
+// DATA ************************************************************************************************************************************
+const [{ testimoniesImage, ...page }, events, testimonies] = await Promise.all([
+  getRecordOrThrow({ collection: "pages", slug: "traditions-ancestrales" }, pageFrom),
+  getRecords("events", {
+    filter: ({ from }) => isAfter(from, new Date()),
+    map: (record) => eventFrom(record).then(itemFromEvent),
+  }),
+  getRecords("testimonies", { map: testimonyFrom }),
+]);
+
+const post = { ...itemFromPost(page.post), title: "Bienvenue" };
+
+// CACHE ***********************************************************************************************************************************
+Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
+Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, events, pages_traditions-ancestrales, testimonies`);
+---
+
+<Layout isMain>
+  <PostsItem {post} border="top" class={{ ASIDE: "!max-w-sm" }} />
+  <RecordsItems title="Événements" items={events} border="bottom" intent="light">
+    <div>
+      <p>Retrouvez bientôt ici l'ensemble de mes événements.</p>
+      <strong>Vous pouvez déjà en obtenir le programme en me faisant une demande via le formulaire de contact.</strong>
+    </div>
+  </RecordsItems>
+  <TestimoniesSection {testimonies} image={testimoniesImage} />
+</Layout>
