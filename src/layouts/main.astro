@@ -10,7 +10,7 @@ import TheNewsletter from "./_/the-newsletter.astro";
 import PostsItem from "@/components/posts-item.astro";
 import TheContact from "@/layouts/_/the-contact.astro";
 import { configFrom, itemFromKnowledge, itemFromPost, knowledgeFrom, postFrom } from "@/content/utils";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import { getRecordOrThrow, getRecords } from "pocketbase:astro";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -47,7 +47,7 @@ export type Props = { isMain?: boolean };
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Traditions ancestrales</title>
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body class="group overflow-y-auto overflow-x-hidden" data-theme={knowledge}>
     <RootElement><div data-target="scroll"></div></RootElement>
