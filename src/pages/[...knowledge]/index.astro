@@ -3,7 +3,7 @@ import PostsItem from "@/components/posts-item.astro";
 import RecordsItems from "@/components/records-items.astro";
 import ServicesItems from "@/components/services-items.astro";
 import { eventFrom, itemFromEvent, itemFromPost, itemFromService, knowledgeFrom, pageFrom, pathFromKnowledge } from "@/content/utils";
-import Layout, { layoutCache } from "@/layouts/main.astro";
+import Layout from "@/layouts/main.astro";
 import { isAfter } from "@formkit/tempo";
 import { getRecordOrThrow, getRecords } from "pocketbase:astro";
 
@@ -39,9 +39,9 @@ const consultationsIntent = count > 1 ? "primary" : "light";
 const trainingsIntent = count === 3 ? "white" : "light";
 
 // CACHE ***********************************************************************************************************************************
-Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
-Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
-Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, events, pages_${knowledge}`);
+// Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
+// Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+// Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, events, pages_${knowledge}`);
 ---
 
 <Layout isMain>

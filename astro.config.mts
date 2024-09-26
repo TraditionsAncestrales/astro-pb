@@ -14,7 +14,7 @@ import superforms from "astro-superforms";
 // https://astro.build/config
 export default defineConfig({
   adapter: netlify(),
-  output: "server",
+  // output: "server",
   image: {
     service: imageService({
       placeholder: "blurhash",

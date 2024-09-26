@@ -3,7 +3,7 @@ import Features from "@/components/ui/features.astro";
 import Section from "@/components/ui/section.astro";
 import Title from "@/components/ui/title.astro";
 import { entryFromPost, entryFromService, pathFromPost, pathFromService, postFrom, serviceFrom } from "@/content/utils";
-import Layout, { layoutCache } from "@/layouts/main.astro";
+import Layout from "@/layouts/main.astro";
 import { Image } from "@unpic/astro";
 import { getRecord, getRecords } from "pocketbase:astro";
 
@@ -31,9 +31,9 @@ const sizes = `(min-width: 1536px) 42rem, (min-width: 1280px) 36rem, (min-width:
 // const widths = [320, 448, 576, 672];
 
 // CACHE ***********************************************************************************************************************************
-Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
-Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
-Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, ${collection === "articles" ? "posts" : "services"}_${slug}`);
+// Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
+// Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+// Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, ${collection === "articles" ? "posts" : "services"}_${slug}`);
 ---
 
 <Layout>
