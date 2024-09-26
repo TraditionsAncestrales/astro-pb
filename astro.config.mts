@@ -13,6 +13,7 @@ import simpleStackQuery from "simple-stack-query";
 // https://astro.build/config
 export default defineConfig({
   adapter: vercel(),
+  output: "hybrid",
   image: {
     service: imageService({
       placeholder: "blurhash",
@@ -45,16 +46,19 @@ export default defineConfig({
       }),
     ],
   },
-  env: {
-    schema: {
-      ASTRO_POCKETBASE_ADMIN_EMAIL: envField.string({ context: "server", access: "secret" }),
-      ASTRO_POCKETBASE_ADMIN_PASSWORD: envField.string({ context: "server", access: "secret" }),
-      MAILCHIMP_API_KEY: envField.string({ context: "server", access: "secret" }),
-      MAILCHIMP_LIST_ID: envField.string({ context: "server", access: "secret" }),
-      MAILCHIMP_SERVER: envField.string({ context: "server", access: "secret" }),
-      PUBLIC_ASTRO_POCKETBASE_URL: envField.string({ context: "server", access: "public" }),
-      PUBLIC_IMGIX_URL: envField.string({ context: "server", access: "public" }),
-      RESEND_API_KEY: envField.string({ context: "server", access: "secret" }),
+  experimental: {
+    contentLayer: true,
+    env: {
+      schema: {
+        ASTRO_POCKETBASE_ADMIN_EMAIL: envField.string({ context: "server", access: "secret" }),
+        ASTRO_POCKETBASE_ADMIN_PASSWORD: envField.string({ context: "server", access: "secret" }),
+        MAILCHIMP_API_KEY: envField.string({ context: "server", access: "secret" }),
+        MAILCHIMP_LIST_ID: envField.string({ context: "server", access: "secret" }),
+        MAILCHIMP_SERVER: envField.string({ context: "server", access: "secret" }),
+        PUBLIC_ASTRO_POCKETBASE_URL: envField.string({ context: "server", access: "public" }),
+        PUBLIC_IMGIX_URL: envField.string({ context: "server", access: "public" }),
+        RESEND_API_KEY: envField.string({ context: "server", access: "secret" }),
+      },
     },
   },
 });
