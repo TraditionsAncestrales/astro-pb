@@ -5,6 +5,7 @@ import ServicesItems from "@/components/services-items.astro";
 import { eventFrom, itemFromEvent, itemFromPost, itemFromService, knowledgeFrom, pageFrom, pathFromKnowledge } from "@/content/utils";
 import Layout from "@/layouts/main.astro";
 import { isAfter } from "@formkit/tempo";
+import retry from "async-retry";
 import { getRecordOrThrow, getRecords } from "pocketbase:astro";
 
 // PATHS ***********************************************************************************************************************************
@@ -16,13 +17,17 @@ export async function getStaticPaths() {
 const { knowledge = "traditions-ancestrales" } = Astro.params;
 
 // DATA ************************************************************************************************************************************
-const [page, events] = await Promise.all([
-  getRecordOrThrow({ collection: "pages", slug: knowledge }, pageFrom),
-  getRecords("events", {
-    filter: ({ from }) => isAfter(from, new Date()),
-    map: (record) => eventFrom(record).then(itemFromEvent),
-  }),
-]);
+const [page, events] = await retry(
+  () =>
+    Promise.all([
+      getRecordOrThrow({ collection: "pages", slug: knowledge }, pageFrom),
+      getRecords("events", {
+        filter: ({ from }) => isAfter(from, new Date()),
+        map: (record) => eventFrom(record).then(itemFromEvent),
+      }),
+    ]),
+  { retries: 3 }
+);
 
 //TODO: filter events by knowledge
 
