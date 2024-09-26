@@ -13,6 +13,7 @@ import simpleStackQuery from "simple-stack-query";
 // https://astro.build/config
 export default defineConfig({
   adapter: vercel(),
+  output: "server",
   image: {
     service: imageService({
       placeholder: "blurhash",
