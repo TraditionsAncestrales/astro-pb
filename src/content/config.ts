@@ -1,7 +1,7 @@
-// import { pocketbaseLoader } from "@/lib";
+import { pocketbaseLoader } from "@/lib/pocketbase";
 import { defineCollection } from "astro:content";
 import {
-  pocketbaseLoader,
+  // pocketbaseLoader,
   zConfigRecord,
   zEventsRecord,
   zImagesRecord,
