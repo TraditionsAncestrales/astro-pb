@@ -1,11 +1,10 @@
 ---
-// import PostsItem from "@/components/posts-item.astro";
 // import RecordsItems from "@/components/records-items.astro";
 // import ServicesItems from "@/components/services-items.astro";
-import { knowledgeFrom, pathFromKnowledge } from "@/content/utils";
+import { eventFrom, itemFromEvent, knowledgeFrom, pageFrom, pathFromKnowledge } from "@/content/utils";
 import Layout from "@/layouts/main.astro";
-// import { isAfter } from "@formkit/tempo";
-import { getRecords } from "pocketbase:astro";
+import { isAfter } from "@formkit/tempo";
+import { getRecordOrThrow, getRecords } from "pocketbase:astro";
 
 // PATHS ***********************************************************************************************************************************
 export async function getStaticPaths() {
@@ -13,16 +12,16 @@ export async function getStaticPaths() {
 }
 
 // PROPS ***********************************************************************************************************************************
-// const { knowledge = "traditions-ancestrales" } = Astro.params;
+const { knowledge = "traditions-ancestrales" } = Astro.params;
 
 // DATA ************************************************************************************************************************************
-// const [page, events] = await Promise.all([
-//   getRecordOrThrow({ collection: "pages", slug: knowledge }, pageFrom),
-//   getRecords("events", {
-//     filter: ({ from }) => isAfter(from, new Date()),
-//     map: (record) => eventFrom(record).then(itemFromEvent),
-//   }),
-// ]);
+const [page, events] = await Promise.all([
+  getRecordOrThrow({ collection: "pages", slug: knowledge }, pageFrom),
+  getRecords("events", {
+    filter: ({ from }) => isAfter(from, new Date()),
+    map: (record) => eventFrom(record).then(itemFromEvent),
+  }),
+]);
 
 //TODO: filter events by knowledge
 
@@ -40,8 +39,8 @@ export async function getStaticPaths() {
 ---
 
 <Layout isMain>
-  <!-- <PostsItem {post} border="top" class={{ ASIDE: "!max-w-sm" }} />
-  <ServicesItems services={consultations} intent={consultationsIntent} />
+  <!-- <PostsItem {post} border="top" class={{ ASIDE: "!max-w-sm" }} /> -->
+  <!-- <ServicesItems services={consultations} intent={consultationsIntent} />
   <ServicesItems services={workshops} intent="light" />
   <ServicesItems services={trainings} intent={trainingsIntent} />
   <RecordsItems title="Événements" items={events} border="bottom" intent="primary">
