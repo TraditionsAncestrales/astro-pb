@@ -1,8 +1,9 @@
 ---
 import PostsItem from "@/components/posts-item.astro";
 import ServicesItems from "@/components/services-items.astro";
-import { itemFromPost, itemFromService, knowledgeFrom, pageFrom, pathFromKnowledge } from "@/content/utils";
+import { eventFrom, itemFromEvent, itemFromPost, itemFromService, knowledgeFrom, pageFrom, pathFromKnowledge } from "@/content/utils";
 import Layout from "@/layouts/main.astro";
+import { isAfter } from "@formkit/tempo";
 import { getRecordOrThrow, getRecords } from "pocketbase:astro";
 
 // PATHS ***********************************************************************************************************************************
@@ -15,10 +16,10 @@ const { knowledge = "traditions-ancestrales" } = Astro.params;
 
 // DATA ************************************************************************************************************************************
 const page = await getRecordOrThrow({ collection: "pages", slug: knowledge }, pageFrom);
-// const events = await getRecords("events", {
-//   filter: ({ from }) => isAfter(from, new Date()),
-//   map: (record) => eventFrom(record).then(itemFromEvent),
-// });
+const events = await getRecords("events", {
+  filter: ({ from }) => isAfter(from, new Date()),
+  map: (record) => eventFrom(record).then(itemFromEvent),
+});
 
 //TODO: filter events by knowledge
 
