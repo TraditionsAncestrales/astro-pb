@@ -1,6 +1,6 @@
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
-import vercel from "@astrojs/vercel/serverless";
+// import vercel from "@astrojs/vercel/serverless";
 import { imageService } from "@unpic/astro/service";
 import icon from "astro-icon";
 import pocketbase from "astro-pocketbase";
@@ -12,7 +12,7 @@ import simpleStackQuery from "simple-stack-query";
 
 // https://astro.build/config
 export default defineConfig({
-  adapter: vercel(),
+  // adapter: vercel(),
   image: {
     service: imageService({
       placeholder: "blurhash",
