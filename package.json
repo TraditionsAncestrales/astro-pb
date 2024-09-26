@@ -15,7 +15,7 @@
     "@astrojs/check": "^0.9.3",
     "@astrojs/svelte": "^5.7.1",
     "@astrojs/tailwind": "^5.1.1",
-    "@astrojs/vercel": "^7.8.1",
+    "@astrojs/vercel": "8.0.0-beta.2",
     "@changesets/cli": "^2.27.8",
     "@effect/schema": "^0.74.0",
     "@fontsource-variable/raleway": "^5.1.0",
