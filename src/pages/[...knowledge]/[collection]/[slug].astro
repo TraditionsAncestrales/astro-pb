@@ -29,11 +29,6 @@ const { features, image, text, title } = entry;
 // VARS ************************************************************************************************************************************
 const sizes = `(min-width: 1536px) 42rem, (min-width: 1280px) 36rem, (min-width: 1024px) 28rem, (min-width: 768px) 20rem (min-width: 640px) 36rem, 100vw`;
 // const widths = [320, 448, 576, 672];
-
-// CACHE ***********************************************************************************************************************************
-// Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
-// Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
-// Astro.response.headers.set("netlify-cache-tag", `${layoutCache}, ${collection === "articles" ? "posts" : "services"}_${slug}`);
 ---
 
 <Layout>
