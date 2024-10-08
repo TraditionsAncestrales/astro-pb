@@ -12,7 +12,6 @@ import {
   zServicesRecord,
   zTestimoniesRecord,
 } from "pocketbase:astro";
-import { imageFrom } from "./utils";
 
 const config = defineCollection({
   loader: pocketbaseLoader({ collection: "config" }),
@@ -26,7 +25,7 @@ const events = defineCollection({
 
 const images = defineCollection({
   loader: pocketbaseLoader({ collection: "images" }),
-  schema: zImagesRecord.transform(imageFrom),
+  schema: zImagesRecord,
 });
 
 const knowledges = defineCollection({

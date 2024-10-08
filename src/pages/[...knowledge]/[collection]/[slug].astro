@@ -2,27 +2,22 @@
 import Features from "@/components/ui/features.astro";
 import Section from "@/components/ui/section.astro";
 import Title from "@/components/ui/title.astro";
-import { entryFromPost, entryFromService, pathFromPost, pathFromService, postFrom, serviceFrom } from "@/content/utils";
 import Layout from "@/layouts/main.astro";
+import { getKnowledgeCollectionSlugPage, getKnowledgeCollectionSlugPagePaths } from "@/lib/api";
 import { Image } from "@unpic/astro";
-import { getRecord, getRecords } from "pocketbase:astro";
+import type { GetStaticPaths } from "astro";
+import { PUBLIC_ASTRO_POCKETBASE_URL } from "astro:env/server";
+import Pocketbase from "pocketbase";
 
 // PATHS ***********************************************************************************************************************************
-export const getStaticPaths = async () =>
-  Promise.all([
-    getRecords("posts", { map: (record) => postFrom(record).then(pathFromPost) }),
-    getRecords("services", { map: (record) => serviceFrom(record).then(pathFromService) }),
-  ]).then((paths) => paths.flat());
+export const getStaticPaths = (() =>
+  getKnowledgeCollectionSlugPagePaths({ pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL), cache: "1d" })) satisfies GetStaticPaths;
 
 // PROPS ***********************************************************************************************************************************
 const { collection, slug } = Astro.params;
 
 // DATA ************************************************************************************************************************************
-const entry = await (collection === "articles"
-  ? //@ts-ignore
-    getRecord({ collection: "posts", slug }, (record) => postFrom(record).then(entryFromPost))
-  : //@ts-ignore
-    getRecord({ collection: "services", slug }, (record) => serviceFrom(record).then(entryFromService)));
+const { entry } = await getKnowledgeCollectionSlugPage(collection, slug, { pocketbase: Astro.locals.pocketbase, cache: "1d" });
 if (!entry) return Astro.redirect("/404");
 const { features, image, text, title } = entry;
 

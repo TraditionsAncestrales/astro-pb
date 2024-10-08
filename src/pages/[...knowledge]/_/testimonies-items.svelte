@@ -2,24 +2,24 @@
   // TYPES *********************************************************************************************************************************
   import type { TestimoniesRecord } from "pocketbase:astro";
 
-  export type TestimoniesItemsProps = { testimonies: TestimoniesRecord[] };
+  export type TestimoniesItemsProps = { items: Pick<TestimoniesRecord, "author" | "text" | "title">[] };
 </script>
 
 <script lang="ts">
   import { fly } from "svelte/transition";
 
   // PROPS *********************************************************************************************************************************
-  let { testimonies }: TestimoniesItemsProps = $props();
+  let { items }: TestimoniesItemsProps = $props();
 
   // STYLES ********************************************************************************************************************************
   const cEl = "absolute inset-0 flex-1 flex flex-col items-center justify-center text-center";
 
   // VARS **********************************************************************************************************************************
   let selected = $state(0);
-  let item = $derived(testimonies[selected]);
+  let item = $derived(items[selected]);
 
   $effect(() => {
-    const interval = setInterval(() => (selected = (selected + 1) % testimonies.length), 6000);
+    const interval = setInterval(() => (selected = (selected + 1) % items.length), 6000);
     return () => clearInterval(interval);
   });
 </script>

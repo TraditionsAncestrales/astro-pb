@@ -1,0 +1,93 @@
+---
+import type { Item } from "@/lib/pocketbase/utils";
+import { cn } from "@/lib/utils";
+import "@splidejs/splide/css";
+import { Image } from "@unpic/astro";
+import { BUTTON } from "./ui/button";
+import Features from "./ui/features.astro";
+import { TITLE } from "@/styles/ui";
+
+// PROPS *********************************************************************************************************************************
+const { class: className, items } = Astro.props;
+
+// TYPES *********************************************************************************************************************************
+type Props = { class?: string; items: Item[] };
+export type CarouselProps = Props;
+---
+
+<RootElement>
+  <div data-target="carousel" role="group" aria-label="Carousel" class={cn("splide", className)}>
+    <div class="splide__track">
+      <ul class="splide__list">
+        {
+          items.map(({ features, href, image, slug, text, title }) => (
+            <li class="splide__slide mb-2 flex flex-col bg-white shadow-md" data-slug={slug}>
+              <Image {...image} width={384} aspectRatio={3 / 2} sizes="24rem" objectFit="cover" class="relative aspect-[3/2] flex-none" />
+              <div class="flex flex-1 flex-col gap-4 p-4 px-6 sm:px-8">
+                <h4 class={TITLE()}>{title}</h4>
+                <Features {features} intent="white" />
+                <article set:html={text} />
+                <div class="flex-1" />
+                <a {href} class={BUTTON({ className: "self-end" })}>
+                  En savoir plus
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</RootElement>
+
+<script>
+  import Splide from "@splidejs/splide";
+
+  RootElement.ready(($) => {
+    const splides: Splide[] = [];
+    for (const carousel of $.all("carousel")) {
+      const splide = new Splide(carousel, {
+        arrows: false,
+        drag: false,
+        fixedWidth: "24rem",
+        gap: "2rem",
+        padding: "1rem",
+        pagination: false,
+        type: "loop",
+      });
+
+      splide.on("overflow", (isOverflow) => {
+        splide.go(0);
+        splide.options = { arrows: isOverflow, drag: isOverflow, clones: isOverflow ? undefined : 0 };
+      });
+
+      splide.mount();
+      splides.push(splide);
+    }
+    return () => {
+      for (const splide of splides) splide.destroy();
+    };
+  });
+</script>
+
+<style is:global>
+  .splide__arrow {
+    background-color: rgb(var(--primary)) !important;
+  }
+
+  .splide__arrow svg {
+    fill: white !important;
+  }
+
+  .splide:not(.is-overflow) .splide__arrows {
+    display: none;
+  }
+
+  .splide:not(.is-overflow) .splide__list {
+    justify-content: center;
+  }
+
+  .splide:not(.is-overflow) .splide__slide:last-child {
+    margin-right: 0 !important;
+  }
+</style>

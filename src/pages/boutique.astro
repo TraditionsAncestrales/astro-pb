@@ -1,11 +1,10 @@
 ---
 import RecordsItems from "@/components/records-items.astro";
-import { itemFromProduct, productFrom } from "@/content/utils";
 import Layout from "@/layouts/main.astro";
-import { getRecords } from "pocketbase:astro";
+import { getShopPage } from "@/lib/api";
 
 // DATA ************************************************************************************************************************************
-const products = await getRecords("products", { map: (record) => productFrom(record).then(itemFromProduct) });
+const { products } = await getShopPage({ pocketbase: Astro.locals.pocketbase, cache: "1d" });
 ---
 
 <Layout>

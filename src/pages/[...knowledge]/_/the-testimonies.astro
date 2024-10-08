@@ -1,15 +1,17 @@
 ---
-import type { Image, Testimony } from "@/content/utils";
+import Section, { type SectionProps } from "@/components/ui/section.astro";
+import Title from "@/components/ui/title.astro";
+import type { Image } from "@/lib/pocketbase/utils";
 import { Image as Img } from "@unpic/astro";
+import type { TestimoniesRecord } from "pocketbase:astro";
 import TestimoniesItems from "./testimonies-items.svelte";
-import Section, { type SectionProps } from "./ui/section.astro";
-import Title from "./ui/title.astro";
 
 // PROPS ***********************************************************************************************************************************
-const { image, testimonies, ...rest } = Astro.props;
+const { image, items, ...rest } = Astro.props;
+if (items.length === 0) return;
 
 // TYPES ***********************************************************************************************************************************
-type Props = SectionProps & { image?: Image; testimonies: Testimony[] };
+type Props = SectionProps & { image?: Image; items: Pick<TestimoniesRecord, "author" | "text" | "title">[] };
 export type TestimoniesSectionProps = Props;
 ---
 
@@ -17,6 +19,6 @@ export type TestimoniesSectionProps = Props;
   {image && <Img {...image} objectFit="cover" layout="fullWidth" height={596} class="absolute inset-0" />}
   <Title slot="header" text="Témoignages" class="z-10" />
   <div class="relative h-[28rem] w-full">
-    <TestimoniesItems client:visible {testimonies} />
+    <TestimoniesItems client:visible {items} />
   </div>
 </Section>

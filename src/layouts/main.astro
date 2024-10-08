@@ -9,10 +9,9 @@ import TheOtherKnowledges from "./_/the-other-knowledges.astro";
 import TheNewsletter from "./_/the-newsletter.astro";
 import PostsItem from "@/components/posts-item.astro";
 import TheContact from "@/layouts/_/the-contact.astro";
-import { configFrom, itemFromKnowledge, itemFromPost, knowledgeFrom, postFrom } from "@/content/utils";
 import { ClientRouter } from "astro:transitions";
-import { getRecordOrThrow, getRecords } from "pocketbase:astro";
 import { Toaster } from "@/components/ui/sonner";
+import { getLayout } from "@/lib/api";
 
 // PROPS ***********************************************************************************************************************************
 const { isMain = false } = Astro.props;
@@ -22,16 +21,10 @@ const { knowledge = "traditions-ancestrales" } = Astro.params;
 const isHome = isMain && knowledge === "traditions-ancestrales";
 
 // DATA ************************************************************************************************************************************
-const [config, knowledges, organizationPost] = await Promise.all([
-  getRecordOrThrow({ collection: "config", id: "fedcba987654321" }, configFrom),
-  getRecords("knowledges", { map: (record) => knowledgeFrom(record).then(itemFromKnowledge) }),
-  getRecordOrThrow({ collection: "posts", slug: "l-association" }, postFrom).then(itemFromPost),
-]);
-
-const currentKnowledge = knowledges.find(({ slug }) => slug === knowledge);
-const otherKnowledges = knowledges.filter(({ slug }) => slug !== knowledge);
-
-const hero = { image: currentKnowledge!.image!, subtitle: config.title, title: currentKnowledge!.title };
+const { config, hero, organizationPost, otherKnowledges } = await getLayout(knowledge, {
+  pocketbase: Astro.locals.pocketbase,
+  cache: "1d",
+});
 
 // CACHE ***********************************************************************************************************************************
 export const layoutCache = "config, knowledges, posts_l-association";
