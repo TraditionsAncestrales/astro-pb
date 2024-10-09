@@ -11,6 +11,7 @@ import simpleStackQuery from "simple-stack-query";
 // https://astro.build/config
 export default defineConfig({
   adapter: netlify(),
+  output: "server",
 
   image: {
     service: imageService({
