@@ -1,4 +1,4 @@
-import { purgeCache, type Config } from "@netlify/functions";
+import { purgeCache } from "@netlify/functions";
 import { z } from "zod";
 
 export default async (request: Request) => {
@@ -15,8 +15,4 @@ export default async (request: Request) => {
     console.error(error_);
     return new Response(JSON.stringify("error"), { status: 500 });
   }
-};
-
-export const config: Config = {
-  path: "/zod-pocketbase",
 };
