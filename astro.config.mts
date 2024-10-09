@@ -3,10 +3,8 @@ import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel/serverless";
 import { imageService } from "@unpic/astro/service";
 import icon from "astro-icon";
-import pocketbase from "astro-pocketbase";
 import superforms from "astro-superforms";
 import { defineConfig, envField } from "astro/config";
-import { pascalCase } from "es-toolkit";
 import { FontaineTransform } from "fontaine";
 import simpleStackQuery from "simple-stack-query";
 
@@ -19,11 +17,6 @@ export default defineConfig({
     }),
   },
   integrations: [
-    pocketbase({
-      ignore: ["users"],
-      nameEnumSchema: (name) => `z${pascalCase(name)}`,
-      nameRecordSchema: (name) => `z${pascalCase(name)}Record`,
-    }),
     tailwind({
       applyBaseStyles: false,
     }),
