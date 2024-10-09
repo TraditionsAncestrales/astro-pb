@@ -21,6 +21,7 @@
     "@iconify-json/bi": "^1.2.1",
     "@iconify-json/ph": "^1.2.1",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@netlify/functions": "^2.8.2",
     "@splidejs/splide": "^4.1.4",
     "@types/async-retry": "^1.4.9",
     "@types/leaflet": "^1.9.12",
