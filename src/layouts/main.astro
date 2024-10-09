@@ -27,7 +27,7 @@ const { config, hero, organizationPost, otherKnowledges } = await getLayout(know
 });
 
 // CACHE ***********************************************************************************************************************************
-export const layoutCache = "config, knowledges, posts_l-association";
+export const layoutCache = ["config", "knowledges", "posts_l-association"];
 
 // TYPES ***********************************************************************************************************************************
 export type Props = { isMain?: boolean };
