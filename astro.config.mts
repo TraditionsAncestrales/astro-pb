@@ -35,6 +35,7 @@ export default defineConfig({
 
   vite: {
     plugins: [
+      //@ts-expect-error
       FontaineTransform.vite({
         fallbacks: ["Arial"],
         resolvePath: (id) => new URL(id.startsWith("/") ? `public/${id.slice(1)}` : `node_modules/${id}`, import.meta.url),
