@@ -23,7 +23,7 @@ const isHome = isMain && knowledge === "traditions-ancestrales";
 // DATA ************************************************************************************************************************************
 const { config, hero, organizationPost, otherKnowledges } = await getLayout(knowledge, {
   pocketbase: Astro.locals.pocketbase,
-  cache: "1d",
+  cache: import.meta.env.DEV ? "1d" : undefined,
 });
 
 // CACHE ***********************************************************************************************************************************
