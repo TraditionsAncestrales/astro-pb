@@ -94,7 +94,7 @@ export async function getKnowledgeCollectionSlugPageEntriesRecords(opts: Helpers
 export async function getKnowledgeCollectionSlugPageRecords(collection: string, slug: string, opts: HelpersFromOpts) {
   const { getRecord } = helpersFrom(opts);
 
-  const zPost = select(zPostsRecord, ["collectionName", "text", "title"], { image: zImage });
+  const zPost = select(zPostsRecord, ["collectionName", "text", "title"], { image: zImage.optional() });
 
   const zService = select(zServicesRecord, ["collectionName", "duration", "name", "price", "text"], {
     image: zImage,
