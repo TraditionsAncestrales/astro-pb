@@ -1,6 +1,6 @@
+import netlify from "@astrojs/netlify";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
-import vercel from "@astrojs/vercel/serverless";
 import { imageService } from "@unpic/astro/service";
 import icon from "astro-icon";
 import superforms from "astro-superforms";
@@ -10,12 +10,14 @@ import simpleStackQuery from "simple-stack-query";
 
 // https://astro.build/config
 export default defineConfig({
-  adapter: vercel(),
+  adapter: netlify(),
+
   image: {
     service: imageService({
       placeholder: "blurhash",
     }),
   },
+
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -30,6 +32,7 @@ export default defineConfig({
     simpleStackQuery(),
     superforms(),
   ],
+
   vite: {
     plugins: [
       FontaineTransform.vite({
@@ -38,6 +41,7 @@ export default defineConfig({
       }),
     ],
   },
+
   env: {
     schema: {
       ASTRO_POCKETBASE_ADMIN_EMAIL: envField.string({ context: "server", access: "secret" }),
