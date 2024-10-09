@@ -10,7 +10,10 @@ import TheTestimonies from "./_/the-testimonies.astro";
 
 // PATHS ***********************************************************************************************************************************
 export const getStaticPaths = (async () =>
-  getKnowledgePagePaths({ pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL), cache: "1d" })) satisfies GetStaticPaths;
+  getKnowledgePagePaths({
+    pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL),
+    cache: import.meta.env.DEV ? "1d" : undefined,
+  })) satisfies GetStaticPaths;
 
 // PROPS ***********************************************************************************************************************************
 const { knowledge = "traditions-ancestrales" } = Astro.params;
@@ -18,7 +21,7 @@ const { knowledge = "traditions-ancestrales" } = Astro.params;
 // DATA ************************************************************************************************************************************
 const { consultations, events, post, testimonies, trainings, workshops } = await getKnowledgePage(knowledge, {
   pocketbase: Astro.locals.pocketbase,
-  cache: "1d",
+  cache: import.meta.env.DEV ? "1d" : undefined,
 });
 
 //TODO: filter events by knowledge

@@ -11,13 +11,19 @@ import Pocketbase from "pocketbase";
 
 // PATHS ***********************************************************************************************************************************
 export const getStaticPaths = (() =>
-  getKnowledgeCollectionSlugPagePaths({ pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL), cache: "1d" })) satisfies GetStaticPaths;
+  getKnowledgeCollectionSlugPagePaths({
+    pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL),
+    cache: import.meta.env.DEV ? "1d" : undefined,
+  })) satisfies GetStaticPaths;
 
 // PROPS ***********************************************************************************************************************************
 const { collection, slug } = Astro.params;
 
 // DATA ************************************************************************************************************************************
-const { entry } = await getKnowledgeCollectionSlugPage(collection, slug, { pocketbase: Astro.locals.pocketbase, cache: "1d" });
+const { entry } = await getKnowledgeCollectionSlugPage(collection, slug, {
+  pocketbase: Astro.locals.pocketbase,
+  cache: import.meta.env.DEV ? "1d" : undefined,
+});
 if (!entry) return Astro.redirect("/404");
 const { features, image, text, title } = entry;
 

@@ -4,7 +4,7 @@ import Layout, { layoutCache } from "@/layouts/main.astro";
 import { getShopPage } from "@/lib/api";
 
 // DATA ************************************************************************************************************************************
-const { products } = await getShopPage({ pocketbase: Astro.locals.pocketbase, cache: "1d" });
+const { products } = await getShopPage({ pocketbase: Astro.locals.pocketbase, cache: import.meta.env.DEV ? "1d" : undefined });
 
 // CACHE ***********************************************************************************************************************************
 Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
