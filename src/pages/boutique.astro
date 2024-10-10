@@ -1,19 +1,15 @@
 ---
-import RecordsItems from "@/components/records-items.astro";
 import Layout, { layoutCache } from "@/layouts/main.astro";
-import { getShopPage } from "@/lib/api";
-
-// DATA ************************************************************************************************************************************
-const { products } = await getShopPage({ pocketbase: Astro.locals.pocketbase, cache: import.meta.env.DEV ? "1d" : undefined });
+import ProductsItems from "./_/products-items.astro";
 
 // CACHE ***********************************************************************************************************************************
 Astro.response.headers.set("cache-control", "public, max-age=0, must-revalidate");
-Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+Astro.response.headers.set("netlify-cdn-cache-control", "durable, s-maxage=31536000");
 Astro.response.headers.set("netlify-cache-tag", [...layoutCache, "products"].join(","));
 ---
 
 <Layout>
-  <RecordsItems title="Boutique" items={products} border="all" intent="light">
-    <p>Il n'y a actuellement aucun produit dans la boutique.</p>
-  </RecordsItems>
+  <ProductsItems server:defer>
+    <div class="animate-pulse rounded-md bg-muted"></div>
+  </ProductsItems>
 </Layout>
