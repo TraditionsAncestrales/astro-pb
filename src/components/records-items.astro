@@ -12,7 +12,7 @@ const { intent = "white", items = [], title: singular, ...rest } = Astro.props;
 
 // VARS ************************************************************************************************************************************
 const hasSome = items.length > 0;
-if (!hasSome || !Astro.slots.has("default")) return;
+if (!hasSome && !Astro.slots.has("default")) return;
 
 const isSingle = items.length === 1;
 const title = `${singular}${isSingle ? "" : "s"}`;
