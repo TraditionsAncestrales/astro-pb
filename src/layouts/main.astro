@@ -16,7 +16,7 @@ import { getLayout } from "@/lib/api";
 // DATA ************************************************************************************************************************************
 const { config, hero, isHome, isMain, organizationPost, otherKnowledges, theme } = await getLayout(
   Astro.params.knowledge ?? "traditions-ancestrales",
-  Astro.routePattern === "[...knowledge]",
+  Astro.routePattern === "/[...knowledge]",
   { pocketbase: Astro.locals.pocketbase, cache: import.meta.env.DEV ? "1d" : undefined }
 );
 
