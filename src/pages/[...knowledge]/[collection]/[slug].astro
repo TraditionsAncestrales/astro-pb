@@ -6,13 +6,13 @@ import Layout, { layoutCache } from "@/layouts/main.astro";
 import { getKnowledgeCollectionSlugPage, getKnowledgeCollectionSlugPagePaths } from "@/lib/api";
 import { Image } from "@unpic/astro";
 import type { GetStaticPaths } from "astro";
-import { PUBLIC_ASTRO_POCKETBASE_URL } from "astro:env/server";
+import { ZOD_POCKETBASE_URL } from "astro:env/server";
 import Pocketbase from "pocketbase";
 
 // PATHS ***********************************************************************************************************************************
 export const getStaticPaths = (() =>
   getKnowledgeCollectionSlugPagePaths({
-    pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL),
+    pocketbase: new Pocketbase(ZOD_POCKETBASE_URL),
     cache: import.meta.env.DEV ? "1d" : undefined,
   })) satisfies GetStaticPaths;
 

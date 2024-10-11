@@ -4,14 +4,14 @@ import RecordsItems from "@/components/records-items.astro";
 import Layout, { layoutCache } from "@/layouts/main.astro";
 import { getKnowledgePage, getKnowledgePagePaths } from "@/lib/api";
 import type { GetStaticPaths } from "astro";
-import { PUBLIC_ASTRO_POCKETBASE_URL } from "astro:env/server";
+import { ZOD_POCKETBASE_URL } from "astro:env/server";
 import Pocketbase from "pocketbase";
 import TheTestimonies from "./_/the-testimonies.astro";
 
 // PATHS ***********************************************************************************************************************************
 export const getStaticPaths = (async () =>
   getKnowledgePagePaths({
-    pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL),
+    pocketbase: new Pocketbase(ZOD_POCKETBASE_URL),
     cache: import.meta.env.DEV ? "1d" : undefined,
   })) satisfies GetStaticPaths;
 
