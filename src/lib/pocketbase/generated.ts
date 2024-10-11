@@ -108,9 +108,7 @@ export const zPagesRecord = z.object({
   slug: z.string(),
   testimoniesImage: z
     .string()
-    .transform((id) => {
-      return id !== "" ? id : undefined;
-    })
+    .transform((id) => (id === "" ? undefined : id))
     .optional(),
   title: z.string(),
 });
@@ -130,9 +128,7 @@ export const zPostsRecord = z.object({
   excerpt: z.string(),
   image: z
     .string()
-    .transform((id) => {
-      return id !== "" ? id : undefined;
-    })
+    .transform((id) => (id === "" ? undefined : id))
     .optional(),
   knowledge: z.string(),
   slug: z.string(),

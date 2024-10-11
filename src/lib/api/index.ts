@@ -19,22 +19,25 @@ import {
   pathFromKnowledge,
   pathFromPost,
   pathFromService,
+  singleFromPost,
+  singleFromService,
 } from "@/lib/pocketbase/utils";
 import type { HelpersFromOpts } from "zod-pocketbase";
 
 // LAYOUT **********************************************************************************************************************************
-export async function getLayout(knowledge: string | undefined, opts: HelpersFromOpts) {
+export async function getLayout(knowledge: string | undefined, isMain: boolean, opts: HelpersFromOpts) {
   const { config, ...data } = await getLayoutRecords(opts);
   const knowledges = data.knowledges.map((knowledge) => itemFromKnowledge(knowledge));
   const organizationPost = itemFromPost(data.organizationPost);
 
   const theme = knowledge ?? "traditions-ancestrales";
+  const isHome = isMain && theme === "traditions-ancestrales";
   const currentKnowledge = knowledges.find(({ slug }) => slug === theme);
   if (!currentKnowledge) throw new Error("Unknown knowledge");
   const otherKnowledges = knowledges.filter(({ slug }) => slug !== theme);
   const hero = { image: currentKnowledge.image, subtitle: config.title, title: currentKnowledge.title };
 
-  return { config, hero, organizationPost, otherKnowledges, theme };
+  return { config, hero, isHome, isMain, organizationPost, otherKnowledges, theme };
 }
 
 // KNOWLEDGE PAGE **************************************************************************************************************************
@@ -62,15 +65,20 @@ export async function getKnowledgePage(knowledge: string | undefined, opts: Help
 }
 
 // KNOWLEDGE COLLECTION SLUG PAGE **********************************************************************************************************
+export async function getKnowledgeCollectionSlugPageEntries(opts: HelpersFromOpts) {
+  const { posts, services } = await getKnowledgeCollectionSlugPageEntriesRecords(opts);
+  return [...posts.map((post) => entryFromPost(post)), ...services.map((service) => entryFromService(service))];
+}
+
 export async function getKnowledgeCollectionSlugPagePaths(opts: HelpersFromOpts) {
   const { posts, services } = await getKnowledgeCollectionSlugPageEntriesRecords(opts);
   return [...posts.map((post) => pathFromPost(post)), ...services.map((service) => pathFromService(service))];
 }
 
 export async function getKnowledgeCollectionSlugPage(collection: string, slug: string, opts: HelpersFromOpts) {
-  const { entry } = await getKnowledgeCollectionSlugPageRecords(collection, slug, opts);
-  if (!entry) return { entry };
-  return { entry: entry.collectionName === "posts" ? entryFromPost(entry) : entryFromService(entry) };
+  const { single } = await getKnowledgeCollectionSlugPageRecords(collection, slug, opts);
+  if (!single) return { single };
+  return { single: single.collectionName === "posts" ? singleFromPost(single) : singleFromService(single) };
 }
 
 // SHOP PAGE *******************************************************************************************************************************

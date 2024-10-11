@@ -38,7 +38,7 @@ Astro.response.headers.set(
 );
 ---
 
-<Layout isMain>
+<Layout>
   <PostsItem {post} border="top" class={{ ASIDE: "!max-w-sm" }} />
   <RecordsItems title="Consultation" items={consultations} intent={count > 1 ? "primary" : "light"} />
   <RecordsItems title="Atelier" items={workshops} intent="light" />

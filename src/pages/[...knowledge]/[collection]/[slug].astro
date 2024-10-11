@@ -20,12 +20,12 @@ export const getStaticPaths = (() =>
 const { collection, slug } = Astro.params;
 
 // DATA ************************************************************************************************************************************
-const { entry } = await getKnowledgeCollectionSlugPage(collection, slug, {
+const { single } = await getKnowledgeCollectionSlugPage(collection, slug, {
   pocketbase: Astro.locals.pocketbase,
   cache: import.meta.env.DEV ? "1d" : undefined,
 });
-if (!entry) return Astro.redirect("/404");
-const { features, image, text, title } = entry;
+if (!single) return Astro.redirect("/404");
+const { features, image, text, title } = single;
 
 // VARS ************************************************************************************************************************************
 const sizes = `(min-width: 1536px) 42rem, (min-width: 1280px) 36rem, (min-width: 1024px) 28rem, (min-width: 768px) 20rem (min-width: 640px) 36rem, 100vw`;

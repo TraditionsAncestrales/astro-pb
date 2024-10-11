@@ -101,11 +101,11 @@ export async function getKnowledgeCollectionSlugPageRecords(collection: string, 
     places: select(zPlacesRecord, ["name"]).array(),
   });
 
-  const entry = await (collection === "articles"
+  const single = await (collection === "articles"
     ? getRecord({ collection: "posts", slug }, { schema: zPost })
     : getRecord({ collection: "services", slug }, { schema: zService }));
 
-  return { entry };
+  return { single };
 }
 
 // SHOP PAGE *******************************************************************************************************************************

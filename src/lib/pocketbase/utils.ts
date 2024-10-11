@@ -58,11 +58,11 @@ export function pathFromKnowledge(knowledge: KnowledgeForRoute) {
 }
 
 // POST ************************************************************************************************************************************
-function strictEntryFromPost(post: PostForEntry) {
+function strictSingleFromPost(post: PostForSingle) {
   const { image, text, title } = post;
   return { features: [], image: imageFrom(image), text, title };
 }
-export const entryFromPost = allowUndefined(strictEntryFromPost);
+export const singleFromPost = allowUndefined(strictSingleFromPost);
 
 function strictItemFromPost(post: PostForItem) {
   const { excerpt: text, image, slug, title } = post;
@@ -75,8 +75,12 @@ export function hrefFromPost(post: PostForRoute) {
   return `${hrefFromKnowledge(post.knowledge)}articles/${post.slug}`;
 }
 
-export function pathFromPost({ knowledge, slug }: PostForRoute) {
-  return { params: { knowledge: fragmentFromKnowledge(knowledge), collection: "articles", slug } };
+export function entryFromPost({ knowledge, slug }: PostForRoute) {
+  return { knowledge: fragmentFromKnowledge(knowledge), collection: "articles", slug };
+}
+
+export function pathFromPost(post: PostForRoute) {
+  return { params: entryFromPost(post) };
 }
 
 // PRODUCT *********************************************************************************************************************************
@@ -92,11 +96,11 @@ export function featuresFromProduct({ price }: ProductForFeatures) {
 }
 
 // SERVICES ********************************************************************************************************************************
-function strictEntryFromService(service: ServiceForEntry) {
+function strictSingleFromService(service: ServiceForSingle) {
   const { image, name: title, text } = service;
   return { features: featuresFromService(service), image: imageFrom(image), text, title };
 }
-export const entryFromService = allowUndefined(strictEntryFromService);
+export const singleFromService = allowUndefined(strictSingleFromService);
 
 function strictItemFromService(service: ServiceForItem) {
   const { category, excerpt: text, image, name: title, slug } = service;
@@ -121,10 +125,12 @@ export function hrefFromService(service: ServiceForRoute) {
   return `${hrefFromKnowledge(service.knowledge)}${fragmentFromService(service)}/${service.slug}`;
 }
 
+export function entryFromService(service: ServiceForRoute) {
+  return { knowledge: fragmentFromKnowledge(service.knowledge), collection: fragmentFromService(service), slug: service.slug };
+}
+
 export function pathFromService(service: ServiceForRoute) {
-  return {
-    params: { knowledge: fragmentFromKnowledge(service.knowledge), collection: fragmentFromService(service), slug: service.slug },
-  };
+  return { params: entryFromService(service) };
 }
 
 // TYPES ***********************************************************************************************************************************
@@ -138,12 +144,12 @@ type EventForItem = Pick<EventsRecord, "excerpt" | "from" | "name" | "slug" | "t
 type ImageForEntry = Pick<ImagesRecord, "alt" | "height" | "id" | "src" | "width">;
 type KnowledgeForItem = KnowledgeForRoute & Pick<KnowledgesRecord, "name" | "text"> & { image: ImageForEntry };
 type KnowledgeForRoute = Pick<KnowledgesRecord, "slug">;
-type PostForEntry = Pick<PostsRecord, "text" | "title"> & { image?: ImageForEntry };
+type PostForSingle = Pick<PostsRecord, "text" | "title"> & { image?: ImageForEntry };
 type PostForItem = PostForRoute & Pick<PostsRecord, "excerpt" | "title"> & { image?: ImageForEntry };
 type PostForRoute = Pick<PostsRecord, "slug"> & { knowledge: KnowledgeForRoute };
 type ProductForFeatures = Pick<ProductsRecord, "price">;
 type ProductForItem = ProductForFeatures & Pick<ProductsRecord, "excerpt" | "name" | "slug" | "url"> & { image: ImageForEntry };
-type ServiceForEntry = ServiceForFeatures & Pick<ServicesRecord, "name" | "text"> & { image: ImageForEntry };
+type ServiceForSingle = ServiceForFeatures & Pick<ServicesRecord, "name" | "text"> & { image: ImageForEntry };
 type ServiceForFeatures = Pick<ServicesRecord, "price" | "duration"> & { places: Pick<PlacesRecord, "name">[] };
 type ServiceForFragment = Pick<ServicesRecord, "category">;
 type ServiceForItem = ServiceForFeatures & ServiceForRoute & Pick<ServicesRecord, "excerpt" | "name"> & { image: ImageForEntry };

@@ -13,24 +13,15 @@ import { ClientRouter } from "astro:transitions";
 import { Toaster } from "@/components/ui/sonner";
 import { getLayout } from "@/lib/api";
 
-// PROPS ***********************************************************************************************************************************
-const { isMain = false } = Astro.props;
-const { knowledge = "traditions-ancestrales" } = Astro.params;
-
-// VARS ************************************************************************************************************************************
-const isHome = isMain && knowledge === "traditions-ancestrales";
-
 // DATA ************************************************************************************************************************************
-const { config, hero, organizationPost, otherKnowledges } = await getLayout(knowledge, {
-  pocketbase: Astro.locals.pocketbase,
-  cache: import.meta.env.DEV ? "1d" : undefined,
-});
+const { config, hero, isHome, isMain, organizationPost, otherKnowledges, theme } = await getLayout(
+  Astro.params.knowledge ?? "traditions-ancestrales",
+  Astro.routePattern === "[...knowledge]",
+  { pocketbase: Astro.locals.pocketbase, cache: import.meta.env.DEV ? "1d" : undefined }
+);
 
 // CACHE ***********************************************************************************************************************************
 export const layoutCache = ["config", "knowledges", "posts_l-association"];
-
-// TYPES ***********************************************************************************************************************************
-export type Props = { isMain?: boolean };
 ---
 
 <html lang="fr">
@@ -42,7 +33,7 @@ export type Props = { isMain?: boolean };
     <title>Traditions ancestrales</title>
     <ClientRouter />
   </head>
-  <body class="group overflow-y-auto overflow-x-hidden" data-theme={knowledge}>
+  <body class="group overflow-y-auto overflow-x-hidden" data-theme={theme}>
     <RootElement><div data-target="scroll"></div></RootElement>
     <TheHeader class="fixed left-0 top-0 z-30 w-full" />
     <TheHero {...hero} class={cn(isMain ? "h-screen" : "h-[50vh]")} />
