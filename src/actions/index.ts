@@ -27,13 +27,13 @@ export const server = {
       if (!listId) return message<Message>(form, "BAD_REQUEST", { status: 400 });
       const subscriberHash = md5(email.toLowerCase());
       mailchimp.setConfig({ apiKey: MAILCHIMP_API_KEY, server: MAILCHIMP_SERVER });
-      try {
-        const { status } = await mailchimp.lists.getListMember(listId, subscriberHash);
-        if (status !== "unsubscribed") return message<Message>(form, "CONFLICT", { status: 409 });
-        await mailchimp.lists.updateListMember(listId, subscriberHash, { status: "subscribed" });
-      } catch {
-        await mailchimp.lists.addListMember(listId, { email_address: email, status: "subscribed" });
-      }
+      // try {
+      //   const { status } = await mailchimp.lists.getListMember(listId, subscriberHash);
+      //   if (status !== "unsubscribed") return message<Message>(form, "CONFLICT", { status: 409 });
+      //   await mailchimp.lists.updateListMember(listId, subscriberHash, { status: "subscribed" });
+      // } catch {
+      //   await mailchimp.lists.addListMember(listId, { email_address: email, status: "subscribed" });
+      // }
       return message<Message>(form, "SUCCESS");
     },
   }),
