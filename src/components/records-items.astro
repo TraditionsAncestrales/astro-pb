@@ -16,7 +16,7 @@ if (!hasSome && !Astro.slots.has("default")) return;
 
 const isSingle = items.length === 1;
 const title = `${singular}${isSingle ? "" : "s"}`;
-const { features, href, image, text } = items[0];
+const { features, href, image, text } = items[0] ?? {};
 
 // TYPES ***********************************************************************************************************************************
 type Props = { items: Item[]; title: string } & SectionProps;

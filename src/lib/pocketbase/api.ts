@@ -72,7 +72,7 @@ export async function getKnowledgePageRecords(knowledge: string, opts: HelpersFr
   const zTestimony = select(zTestimoniesRecord, ["author", "text", "title"]);
 
   const [events, page, testimonies] = await Promise.all([
-    getRecords("events", { schema: zEvent }),
+    getRecords("events", { schema: zEvent, filter: knowledge !== "traditions-ancestrales" ? `service.knowledge.slug="${knowledge}"` : "" }),
     getRecord({ collection: "pages", slug: knowledge }, { schema: zPage }),
     knowledge === "traditions-ancestrales" ? getRecords("testimonies", { schema: zTestimony }) : [],
   ]);
