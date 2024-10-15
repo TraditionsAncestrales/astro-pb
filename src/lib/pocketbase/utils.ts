@@ -1,12 +1,12 @@
-import {
-  type EventsRecord,
-  type ImagesRecord,
-  type KnowledgesRecord,
-  type PlacesRecord,
-  type PostsRecord,
-  type ProductsRecord,
-  type ServicesRecord,
-} from "@/lib/pocketbase/generated";
+import type {
+  EventsRecord,
+  ImagesRecord,
+  KnowledgesRecord,
+  PlacesRecord,
+  PostsRecord,
+  ProductsRecord,
+  ServicesRecord,
+} from "@/lib/pocketbase/schemas";
 import { format } from "@formkit/tempo";
 import { PUBLIC_IMGIX_URL } from "astro:env/server";
 

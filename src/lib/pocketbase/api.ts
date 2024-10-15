@@ -11,7 +11,7 @@ import {
   zProductsRecord,
   zServicesRecord,
   zTestimoniesRecord,
-} from "@/lib/pocketbase/generated";
+} from "@/lib/pocketbase/schemas";
 
 // SHARED **********************************************************************************************************************************
 export const toOmit = { collectionId: true, collectionName: true, created: true, updated: true } as const;

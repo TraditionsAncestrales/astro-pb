@@ -1,7 +1,7 @@
 <script lang="ts" module>
-  // TYPES *********************************************************************************************************************************
-  import type { TestimoniesRecord } from "pocketbase:astro";
+  import type { TestimoniesRecord } from "@/lib/pocketbase/schemas";
 
+  // TYPES *********************************************************************************************************************************
   export type TestimoniesItemsProps = { items: Pick<TestimoniesRecord, "author" | "text" | "title">[] };
 </script>
 

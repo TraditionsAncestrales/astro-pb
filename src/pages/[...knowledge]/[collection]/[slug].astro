@@ -5,16 +5,16 @@ import Title from "@/components/ui/title.astro";
 import Layout, { layoutCache } from "@/layouts/main.astro";
 import { getKnowledgeCollectionSlugPage, getKnowledgeCollectionSlugPagePaths } from "@/lib/api";
 import { Image } from "@unpic/astro";
-import type { GetStaticPaths } from "astro";
-import { ZOD_POCKETBASE_URL } from "astro:env/server";
+import { PUBLIC_ASTRO_POCKETBASE_URL } from "astro:env/server";
 import Pocketbase from "pocketbase";
 
 // PATHS ***********************************************************************************************************************************
-export const getStaticPaths = (() =>
-  getKnowledgeCollectionSlugPagePaths({
-    pocketbase: new Pocketbase(ZOD_POCKETBASE_URL),
+export function getStaticPaths() {
+  return getKnowledgeCollectionSlugPagePaths({
+    pocketbase: new Pocketbase(PUBLIC_ASTRO_POCKETBASE_URL),
     cache: import.meta.env.DEV ? "1d" : undefined,
-  })) satisfies GetStaticPaths;
+  });
+}
 
 // PROPS ***********************************************************************************************************************************
 const { collection, slug } = Astro.params;

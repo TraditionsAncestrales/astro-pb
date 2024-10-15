@@ -8,6 +8,9 @@ import { defineConfig, envField } from "astro/config";
 import { FontaineTransform } from "fontaine";
 import simpleStackQuery from "simple-stack-query";
 
+import pocketbase from "astro-pocketbase";
+import { pascalCase } from "es-toolkit";
+
 // https://astro.build/config
 export default defineConfig({
   adapter: netlify(),
@@ -32,6 +35,11 @@ export default defineConfig({
     }),
     simpleStackQuery(),
     superforms(),
+    pocketbase({
+      ignore: ["users"],
+      nameEnumSchema: (name: string) => `z${pascalCase(name)}`,
+      nameRecordSchema: (name: string) => `z${pascalCase(name)}Record`,
+    }),
   ],
 
   vite: {
@@ -46,14 +54,14 @@ export default defineConfig({
 
   env: {
     schema: {
+      ASTRO_POCKETBASE_ADMIN_EMAIL: envField.string({ context: "server", access: "secret" }),
+      ASTRO_POCKETBASE_ADMIN_PASSWORD: envField.string({ context: "server", access: "secret" }),
       MAILCHIMP_API_KEY: envField.string({ context: "server", access: "secret" }),
       MAILCHIMP_LIST_ID: envField.string({ context: "server", access: "secret" }),
       MAILCHIMP_SERVER: envField.string({ context: "server", access: "secret" }),
+      PUBLIC_ASTRO_POCKETBASE_URL: envField.string({ context: "server", access: "public" }),
       PUBLIC_IMGIX_URL: envField.string({ context: "server", access: "public" }),
       RESEND_API_KEY: envField.string({ context: "server", access: "secret" }),
-      ZOD_POCKETBASE_ADMIN_EMAIL: envField.string({ context: "server", access: "secret" }),
-      ZOD_POCKETBASE_ADMIN_PASSWORD: envField.string({ context: "server", access: "secret" }),
-      ZOD_POCKETBASE_URL: envField.string({ context: "server", access: "public" }),
     },
   },
 });
